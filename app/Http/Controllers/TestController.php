@@ -8,9 +8,7 @@ class TestController extends Controller
 {
     public function test()
     {
-        $message = 'test';
-
-        return view('test', ['test' => $message]);
+        return view('test');
     }
 
     public function postTest(Request $request)
