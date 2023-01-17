@@ -15,6 +15,14 @@ class CreateApplicationsTable extends Migration
     {
         Schema::create('applications', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('client_id')->index();
+            $table->unsignedBigInteger('invited_client_id')->nullable();
+            $table->integer('service_type');
+            $table->integer('engaged_by_id');
+            $table->dateTime('engaged_at');
+            $table->string('application_status');
+            $table->string('reject_reason');
+            $table->string('file_ids');
             $table->timestamps();
         });
     }
