@@ -18,11 +18,11 @@ class CreateApplicationsTable extends Migration
             $table->unsignedBigInteger('client_id')->index();
             $table->unsignedBigInteger('invited_client_id')->nullable();
             $table->integer('service_type');
-            $table->integer('engaged_by_id');
-            $table->dateTime('engaged_at');
+            $table->integer('engaged_by_id')->nullable();
+            $table->dateTime('engaged_at')->nullable();
             $table->string('application_status');
-            $table->string('reject_reason');
-            $table->string('file_ids');
+            $table->string('reject_reason')->nullable();
+            $table->string('file_ids')->nullable();
             $table->timestamps();
         });
     }

@@ -20,8 +20,8 @@ class CreateClientsTable extends Migration
             $table->string('surname');
             $table->string('patronymic')->nullable();
             $table->string('phone');
-            $table->integer('engaged_by_id');
-            $table->dateTime('engaged_at');
+            $table->integer('engaged_by_id')->nullable();
+            $table->dateTime('engaged_at')->nullable();
             $table->string('client_status');
             $table->date('birthdate');
             $table->string('gender');
