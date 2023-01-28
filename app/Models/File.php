@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
 
 /**
  * App\Models\File
@@ -12,18 +14,11 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $client_id
  * @property string $file_name
  * @property string $file_type
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @method static \Illuminate\Database\Eloquent\Builder|File newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|File newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|File query()
- * @method static \Illuminate\Database\Eloquent\Builder|File whereClientId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|File whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|File whereFileName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|File whereFileType($value)
- * @method static \Illuminate\Database\Eloquent\Builder|File whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|File whereUpdatedAt($value)
- * @mixin \Eloquent
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @method static Builder|File newModelQuery()
+ * @method static Builder|File newQuery()
+ * @method static Builder|File query()
  */
 class File extends Model
 {
