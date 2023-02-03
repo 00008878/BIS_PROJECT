@@ -2,13 +2,13 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-use Carbon\Carbon;
 
 /**
- * App\Models\ApplicationProgress
+ * App\Models\ApplicationProgress.
  *
  * @property int $id
  * @property int $application_id
@@ -31,6 +31,7 @@ use Carbon\Carbon;
  * @method static Builder|ApplicationProgress whereRejectedAt($value)
  * @method static Builder|ApplicationProgress whereReviewedAt($value)
  * @method static Builder|ApplicationProgress whereUpdatedAt($value)
+ * @mixin \Eloquent
  */
 class ApplicationProgress extends Model
 {

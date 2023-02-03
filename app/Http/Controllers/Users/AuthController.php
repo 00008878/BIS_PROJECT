@@ -2,18 +2,18 @@
 
 namespace App\Http\Controllers\Users;
 
+use Exception;
 use App\DTO\Auth\SignInDTO;
 use App\DTO\Auth\SignUpDTO;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Contracts\View\View;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Auth\SignInRequest;
-use App\Http\Requests\Auth\SignUpRequest;
 use App\UseCases\Auth\SignInUseCase;
 use App\UseCases\Auth\SignUpUseCase;
-use Exception;
-use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
-use Illuminate\Contracts\View\View;
-use Illuminate\Http\JsonResponse;
+use App\Http\Requests\Auth\SignInRequest;
+use App\Http\Requests\Auth\SignUpRequest;
+use Illuminate\Contracts\Foundation\Application;
 
 class AuthController extends Controller
 {

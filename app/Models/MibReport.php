@@ -2,22 +2,25 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
- * App\Models\MibReport
+ * App\Models\MibReport.
  *
  * @property int $id
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @method static \Illuminate\Database\Eloquent\Builder|MibReport newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|MibReport newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|MibReport query()
- * @method static \Illuminate\Database\Eloquent\Builder|MibReport whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|MibReport whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|MibReport whereUpdatedAt($value)
- * @mixin \Eloquent
+ * @property int $client_id
+ * @property string $debtor_name
+ * @property int $debtor_pin
+ * @property int $total_debt_sum
+ * @property string $debt_type
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @method static Builder|MibReport newModelQuery()
+ * @method static Builder|MibReport newQuery()
+ * @method static Builder|MibReport query()
  */
 class MibReport extends Model
 {

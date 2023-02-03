@@ -2,8 +2,8 @@
 
 namespace App\UseCases\Auth;
 
-use App\DTO\Auth\SignUpDTO;
 use App\Models\User;
+use App\DTO\Auth\SignUpDTO;
 use Illuminate\Support\Facades\Hash;
 
 class SignUpUseCase
@@ -20,7 +20,7 @@ class SignUpUseCase
 
         return [
             'user' => $user,
-            'token' => $token
+            'token' => $token,
         ];
     }
 }

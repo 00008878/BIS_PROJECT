@@ -2,11 +2,11 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
- * App\Models\ApplicationSession
+ * App\Models\ApplicationSession.
  *
  * @property int $id
  * @property \Illuminate\Support\Carbon|null $created_at

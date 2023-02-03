@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\Files\FileTypesEnum;
 use App\Models\File;
-use App\UseCases\Identification\CheckIdentificationUseCase;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
+use App\UseCases\Identification\CheckIdentificationUseCase;
 
 class PassportController extends Controller
 {

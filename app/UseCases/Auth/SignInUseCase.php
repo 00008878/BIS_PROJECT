@@ -2,11 +2,11 @@
 
 namespace App\UseCases\Auth;
 
-use App\DTO\Auth\SignInDTO;
-use App\Models\User;
 use Exception;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
+use App\Models\User;
+use App\DTO\Auth\SignInDTO;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class SignInUseCase
 {
@@ -31,7 +31,7 @@ class SignInUseCase
 
         return [
             'user' => $user,
-            'token' => $token
+            'token' => $token,
         ];
     }
 }
