@@ -10,6 +10,8 @@ use Illuminate\Contracts\View\View;
 use App\Http\Controllers\Controller;
 use App\UseCases\Auth\SignInUseCase;
 use App\UseCases\Auth\SignUpUseCase;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Contracts\View\Factory;
 use App\Http\Requests\Auth\SignInRequest;
 use App\Http\Requests\Auth\SignUpRequest;
@@ -17,6 +19,16 @@ use Illuminate\Contracts\Foundation\Application;
 
 class AuthController extends Controller
 {
+    public function signInView(): Factory|View|Application
+    {
+        return view('signin');
+    }
+
+    public function signUpView(): Factory|View|Application
+    {
+        return view('signup');
+    }
+
     public function signUp(SignUpRequest $request, SignUpUseCase $signUpUseCase): JsonResponse
     {
         $response = $signUpUseCase->execute(SignUpDTO::fromArray($request->validated()));
@@ -31,6 +43,15 @@ class AuthController extends Controller
     {
         $response = $signInUseCase->execute(SignInDTO::fromArray($request->validated()));
 
-        return view('test2', ['user' => $response]);
+        return view('home', ['user' => $response]);
+    }
+
+    public function logout(): RedirectResponse
+    {
+        if (Auth::check()) {
+            Auth::logout();
+        }
+
+        return redirect()->route('login');
     }
 }

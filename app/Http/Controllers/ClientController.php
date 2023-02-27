@@ -5,37 +5,49 @@ namespace App\Http\Controllers;
 use App\Models\Client;
 use App\Models\Passport;
 use Illuminate\Http\Request;
+use Illuminate\Contracts\View\View;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\Foundation\Application;
 
 class ClientController extends Controller
 {
+    public function registrationView(): Factory|View|Application
+    {
+        return view('client-register');
+    }
+
     public function registration(Request $request)
     {
         $client = new Client();
         $client->name = $request->input('name');
-        $client->surname = $request->input('name');
-        $client->patronymic = $request->input('name');
-        $client->phone = $request->input('name');
-        $client->client_status = $request->input('name');
-        $client->birthdate = $request->input('name');
-        $client->gender = $request->input('name');
+        $client->surname = $request->input('surname');
+        $client->patronymic = $request->input('patronymic');
+        $client->phone = $request->input('phone');
+        $client->client_status = 'NEW';
+        $client->birthdate = $request->input('birthdate');
+        $client->gender = $request->input('gender');
+        $client->user_id = Auth::id();
         $client->save();
 
         $passport = new Passport();
         $passport->client_id = $client->id;
         $passport->serial_number = $request->input('serial_number');
-        $passport->pinfl = $request->input('serial_numer');
-        $passport->name = $request->input('serial_numer');
-        $passport->surname = $request->input('serial_numer');
-        $passport->patronymic = $request->input('serial_numer');
-        $passport->birth_date = $request->input('serial_numer');
-        $passport->gender = $request->input('serial_numer');
-        $passport->issue_date = $request->input('serial_numer');
-        $passport->expiry_date = $request->input('serial_numer');
-        $passport->address = $request->input('serial_numer');
-        $passport->region = $request->input('serial_numer');
-        $passport->city_name = $request->input('serial_numer');
-        $passport->nationality_name = $request->input('serial_numer');
-        $passport->type = $request->input('serial_numer');
+        $passport->pinfl = $request->input('pinfl');
+        $passport->name = $client->name;
+        $passport->surname = $client->surname;
+        $passport->patronymic = $client->patronymic;
+        $passport->birth_date = $client->birthdate;
+        $passport->gender = $client->gender;
+        $passport->issue_date = $request->input('issue_date');
+        $passport->expiry_date = $request->input('expiry_date');
+        $passport->address = $request->input('address');
+        $passport->region = $request->input('region');
+        $passport->city_name = $request->input('city_name');
+        $passport->nationality_name = $request->input('nationality_name');
+        $passport->type = $request->input('type');
         $passport->save();
+
+        return redirect()->route('upload.passport', ['client_id' => $client->id]);
     }
 }

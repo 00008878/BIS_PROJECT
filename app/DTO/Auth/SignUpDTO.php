@@ -6,9 +6,18 @@ final class SignUpDTO
 {
     public function __construct(
         private string $name,
+        private string $surname,
         private string $email,
         private string $password,
     ) {
+    }
+
+    /**
+     * @return string
+     */
+    public function getSurname(): string
+    {
+        return $this->surname;
     }
 
     /**
@@ -39,6 +48,7 @@ final class SignUpDTO
     {
         return new static(
             name: (string) $data['name'],
+            surname: (string) $data['surname'],
             email: (string) $data['email'],
             password: (string) $data['password'],
         );

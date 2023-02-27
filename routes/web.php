@@ -1,7 +1,10 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\FileController;
+use App\Http\Controllers\ClientController;
 use App\Http\Controllers\Users\AuthController;
+use App\Http\Controllers\ServiceTypeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,8 +21,28 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::post('/login', [AuthController::class, 'signIn'])->name('auth.login');
+Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 
-Route::get('/test', [\App\Http\Controllers\TestController::class, 'test']);
+Route::post('/login', [AuthController::class, 'signIn'])->name('login');
 
-Route::post('/post-test', [\App\Http\Controllers\TestController::class, 'postTest']);
+Route::get('/login', [AuthController::class, 'signInView']);
+
+Route::post('/register', [AuthController::class, 'signUp'])->name('signup');
+
+Route::get('/register', [AuthController::class, 'signUpView']);
+
+Route::middleware('auth')->group(function () {
+    Route::get('/home', function () {
+        return view('home');
+    })->name('home');
+
+    Route::get('/passport-register', [ClientController::class, 'registrationView']);
+
+    Route::post('/passport-register', [ClientController::class, 'registration'])->name('client.register');
+
+    Route::get('/upload-passport/{client_id}', [FileController::class, 'uploadPassportView'])->name('upload.passport');
+
+    Route::post('/upload-passport/{client_id}', [FileController::class, 'checkIdentification'])->name('client.upload-passport');
+
+    Route::get('/services', [ServiceTypeController::class, 'servicesView'])->name('services');
+});

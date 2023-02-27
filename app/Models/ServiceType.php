@@ -2,7 +2,9 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
@@ -10,16 +12,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  *
  * @property int $id
  * @property string $type_name
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @method static \Illuminate\Database\Eloquent\Builder|ServiceType newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|ServiceType newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|ServiceType query()
- * @method static \Illuminate\Database\Eloquent\Builder|ServiceType whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ServiceType whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ServiceType whereTypeName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ServiceType whereUpdatedAt($value)
- * @mixin \Eloquent
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @method static Builder|ServiceType newModelQuery()
+ * @method static Builder|ServiceType newQuery()
+ * @method static Builder|ServiceType query()
  */
 class ServiceType extends Model
 {

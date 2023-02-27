@@ -8,6 +8,11 @@
     <title>Test</title>
 </head>
 <body>
-    {{ $user['user'] }}
+<ul>
+    @foreach($types as $type)
+        <li>{{$type->type_name}}</li>
+    @endforeach
+</ul>
+{{--<h3>Please, <a href="{{route('services')}}">enter</a> to create notary deed</h3>--}}
 </body>
 </html>

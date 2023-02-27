@@ -5,7 +5,7 @@ namespace App\UseCases\Auth;
 use Exception;
 use App\Models\User;
 use App\DTO\Auth\SignInDTO;
-use Illuminate\Support\Facades\Hash;
+use App\Models\ServiceType;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class SignInUseCase
@@ -23,15 +23,19 @@ class SignInUseCase
             throw new ModelNotFoundException('Пользователь не найден', 404);
         }
 
-        if (Hash::check($request->getPassword(), $user->password) === false) {
-            throw new Exception('Unauthorized', 401);
+        $service_type = ServiceType::query()
+            ->get();
+
+        if (auth()->attempt([
+            'email' => $request->getEmail(),
+            'password' => $request->getPassword(),
+        ])) {
+            return [
+                'user' => $user,
+                'service_type' => $service_type,
+            ];
         }
 
-        $token = $user->createToken('apitoken')->plainTextToken;
-
-        return [
-            'user' => $user,
-            'token' => $token,
-        ];
+        return [];
     }
 }

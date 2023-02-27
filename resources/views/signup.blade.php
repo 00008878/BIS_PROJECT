@@ -10,19 +10,18 @@
     <title>Login</title>
 </head>
 <body class="text-center" data-new-gr-c-s-check-loaded="14.1093.0" data-gr-ext-installed="">
-<form method="POST" action="{{ route('auth.login') }}" class="form-signin">
+<form method="POST" action="{{ route('signup') }}" class="form-signin">
     @csrf
-    <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
+    <h1 class="h3 mb-3 font-weight-normal">Please register</h1>
+    <label for="inputName" class="sr-only">Name</label>
+    <input type="text" name="name" id="inputName" class="form-control" placeholder="Name" required="" autofocus="">
+    <label for="inputSurname" class="sr-only">Surname</label>
+    <input type="text" name="surname" id="inputSurname" class="form-control" placeholder="Surname" required="" autofocus="">
     <label for="inputEmail" class="sr-only">Email address</label>
     <input type="email" name="email" id="inputEmail" class="form-control" placeholder="Email address" required="" autofocus="">
     <label for="inputPassword" class="sr-only">Password</label>
     <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Password" required="">
-    <div class="checkbox mb-3">
-        <label>
-            <input type="checkbox" value="remember-me"> Remember me
-        </label>
-    </div>
-    <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+    <button class="btn btn-lg btn-primary btn-block" type="submit">Register</button>
 </form>
 </body>
 </html>

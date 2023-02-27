@@ -4,23 +4,31 @@ namespace App\Http\Controllers;
 
 use App\Models\File;
 use Illuminate\Http\Request;
-use Illuminate\Http\JsonResponse;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\Foundation\Application;
 use App\UseCases\Identification\CheckIdentificationUseCase;
 
 class FileController extends Controller
 {
-    public function checkIdentification(Request $request, CheckIdentificationUseCase $checkIdentificationUseCase): JsonResponse
+    public function uploadPassportView(): Factory|View|Application
+    {
+        return view('upload-passport');
+    }
+
+    public function checkIdentification(Request $request, int $client_id, CheckIdentificationUseCase $checkIdentificationUseCase): RedirectResponse
     {
         $request->validate([
             'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
-        $imageName = time() . '.' . $request->input('image')->extension();
+        $imageName = time() . '.' . $request->image->guessExtension();
 
-        $request->input('image')->move(public_path('images'), $imageName);
+        $request->image->move(public_path('images'), $imageName);
 
         $file = new File();
-        $file->client_id = $request->input('client_id');
+        $file->client_id = $client_id;
         $file->file_name = $imageName;
         $file->file_type = $request->input('file_type');
         $file->save();
@@ -28,9 +36,9 @@ class FileController extends Controller
         $checkIdentified = $checkIdentificationUseCase->execute($file);
 
         if ($checkIdentified === 1) {
-            return response()->json(['message' => 'registration completed']);
+            return redirect()->route('home');
         }
 
-        return response()->json(['message' => 'upload photo again']);
+        return redirect()->route('upload.passport', ['client_id' => $client_id]);
     }
 }
