@@ -3,8 +3,9 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\FileController;
 use App\Http\Controllers\ClientController;
+use App\Http\Controllers\ServicesController;
 use App\Http\Controllers\Users\AuthController;
-use App\Http\Controllers\ServiceTypeController;
+use App\Http\Controllers\ApplicationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -44,5 +45,9 @@ Route::middleware('auth')->group(function () {
 
     Route::post('/upload-passport/{client_id}', [FileController::class, 'checkIdentification'])->name('client.upload-passport');
 
-    Route::get('/services', [ServiceTypeController::class, 'servicesView'])->name('services');
+    Route::get('/services/{id}', [ServicesController::class, 'servicesShowView'])->name('services.show');
+
+    Route::get('/services', [ServicesController::class, 'servicesView'])->name('services.all');
+
+    Route::post('/application-create', [ApplicationController::class, 'applicationCreateView'])->name('application.create');
 });

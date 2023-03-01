@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Users;
 use Exception;
 use App\DTO\Auth\SignInDTO;
 use App\DTO\Auth\SignUpDTO;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Contracts\View\View;
 use App\Http\Controllers\Controller;
 use App\UseCases\Auth\SignInUseCase;
@@ -29,11 +28,11 @@ class AuthController extends Controller
         return view('signup');
     }
 
-    public function signUp(SignUpRequest $request, SignUpUseCase $signUpUseCase): JsonResponse
+    public function signUp(SignUpRequest $request, SignUpUseCase $signUpUseCase): Factory|View|Application
     {
         $response = $signUpUseCase->execute(SignUpDTO::fromArray($request->validated()));
 
-        return response()->json($response);
+        return view('home', ['user' => $response]);
     }
 
     /**

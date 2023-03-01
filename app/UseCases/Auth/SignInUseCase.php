@@ -4,8 +4,8 @@ namespace App\UseCases\Auth;
 
 use Exception;
 use App\Models\User;
+use App\Models\Service;
 use App\DTO\Auth\SignInDTO;
-use App\Models\ServiceType;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class SignInUseCase
@@ -23,7 +23,7 @@ class SignInUseCase
             throw new ModelNotFoundException('Пользователь не найден', 404);
         }
 
-        $service_type = ServiceType::query()
+        $services = Service::query()
             ->get();
 
         if (auth()->attempt([
@@ -32,7 +32,7 @@ class SignInUseCase
         ])) {
             return [
                 'user' => $user,
-                'service_type' => $service_type,
+                'services' => $services,
             ];
         }
 

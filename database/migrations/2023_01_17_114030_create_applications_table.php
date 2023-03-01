@@ -22,7 +22,6 @@ class CreateApplicationsTable extends Migration
             $table->dateTime('engaged_at')->nullable();
             $table->string('application_status');
             $table->string('reject_reason')->nullable();
-            $table->string('file_ids')->nullable();
             $table->timestamps();
         });
     }

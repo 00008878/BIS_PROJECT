@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateApplicationSessionsTable extends Migration
+class CreateServiceRequirementsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,10 @@ class CreateApplicationSessionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('application_sessions', function (Blueprint $table) {
+        Schema::create('service_requirements', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('service_id')->index();
+            $table->string('title');
             $table->timestamps();
         });
     }
@@ -26,6 +28,6 @@ class CreateApplicationSessionsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('application_sessions');
+        Schema::dropIfExists('service_requirements');
     }
 }

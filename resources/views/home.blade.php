@@ -13,6 +13,6 @@
     <h1>{{$message}}</h1>
 @endif
 <h1>Welcome, {{ auth()->user()->name }}</h1>
-<h3>Please, <a href="{{route('services')}}">enter</a> to create notary deed</h3>
+<h3>Please, <a href="{{route('services.all')}}">enter</a> to create notary deed</h3>
 </body>
 </html>

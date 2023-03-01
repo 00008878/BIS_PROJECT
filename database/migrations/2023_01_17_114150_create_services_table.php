@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateServiceRequiredDocumentsTable extends Migration
+class CreateServicesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,12 @@ class CreateServiceRequiredDocumentsTable extends Migration
      */
     public function up()
     {
-        Schema::create('service_required_documents', function (Blueprint $table) {
+        Schema::create('services', function (Blueprint $table) {
             $table->id();
+            $table->string('category');
+            $table->string('type');
+            $table->float('price');
+            $table->boolean('two_sided');
             $table->timestamps();
         });
     }
@@ -26,6 +30,6 @@ class CreateServiceRequiredDocumentsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('service_required_documents');
+        Schema::dropIfExists('services');
     }
 }

@@ -9,10 +9,9 @@
 </head>
 <body>
 <ul>
-    @foreach($types as $type)
-        <li>{{$type->type_name}}</li>
+    @foreach($services as $service)
+        <li><a href="{{ route('services.show', ['id' => $service->id]) }}">{{$service->type}}</a></li>
     @endforeach
 </ul>
-{{--<h3>Please, <a href="{{route('services')}}">enter</a> to create notary deed</h3>--}}
 </body>
 </html>
