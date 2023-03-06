@@ -50,4 +50,11 @@ class ClientController extends Controller
 
         return redirect()->route('upload.passport', ['client_id' => $client->id]);
     }
+
+    public function adminIndex(): Factory|View|Application
+    {
+        $clients = Client::all();
+
+        return view('admin.clients', ['clients' => $clients]);
+    }
 }

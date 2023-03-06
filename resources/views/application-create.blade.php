@@ -19,5 +19,17 @@
     </form>
 @endif
 
+<form action="{{ route('application.store') }}" method="POST" enctype="multipart/form-data">
+    @csrf
+@foreach($requirements as $key => $requirement)
+    <label for="{{ $requirement->id }}" class="sr-only">{{ $requirement->title }}</label>
+    <input type="file" name="file-{{ $key }}" id="{{ $requirement->id }}" class="form-control" placeholder="{{ $requirement->title }}" required="" autofocus="">
+    <input type="hidden" name="application_id" value="{{ $application->id }}">
+    <input type="hidden" name="client_id" value="{{ $client->id }}">
+    <input type="hidden" name="service_type" value="{{ $service->type }}">
+@endforeach
+    <button type="submit">Create Application</button>
+</form>
+
 </body>
 </html>

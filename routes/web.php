@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\FileController;
 use App\Http\Controllers\ClientController;
@@ -33,7 +34,11 @@ Route::post('/register', [AuthController::class, 'signUp'])->name('signup');
 Route::get('/register', [AuthController::class, 'signUpView']);
 
 Route::middleware('auth')->group(function () {
-    Route::get('/home', function () {
+    Route::get('/home', function (Request $request) {
+        if ($request->query('message')) {
+            return view('home', ['message' => $request->query('message')]);
+        }
+
         return view('home');
     })->name('home');
 
@@ -50,4 +55,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/services', [ServicesController::class, 'servicesView'])->name('services.all');
 
     Route::post('/application-create', [ApplicationController::class, 'applicationCreateView'])->name('application.create');
+
+    Route::post('/application-store', [ApplicationController::class, 'storeApplicationFiles'])->name('application.store');
+
+    Route::prefix('admin')->group(function () {
+        Route::get('clients', [ClientController::class, 'adminIndex']);
+    });
 });

@@ -24,7 +24,6 @@
     <form action="{{ route('application.create') }}" method="POST">
         @csrf
         <input type="hidden" name="service_id" value="{{ $service->id }}">
-        <input type="hidden" name="user_ud" value="{{ auth()->user()->id }}">
         <button type="submit">Create Application</button>
     </form>
 

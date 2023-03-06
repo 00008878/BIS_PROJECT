@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\File;
 use App\Models\Client;
 use App\Models\Service;
 use App\Models\Application;
 use Illuminate\Http\Request;
+use App\Models\ServiceRequirement;
+use App\Models\ApplicationProgress;
 use Illuminate\Contracts\View\View;
 use Illuminate\Contracts\View\Factory;
 
@@ -18,19 +21,61 @@ class ApplicationController extends Controller
             ->first();
 
         $client = Client::query()
-            ->where('user_id', '=', (int) $request->input('user_id'))
+            ->where('user_id', '=', auth()->user()->id)
             ->first();
 
-        $application = new Application();
-        $application->client_id = $client->id;
-        $application->service_type = $service->id;
-        $application->application_status = 'NEW';
-        $application->save();
+        $application = Application::query()
+            ->where('client_id', '=', $client->id)
+            ->where('application_status', '=', 'NEW')
+            ->first();
+
+        if ($application === null) {
+            $application = new Application();
+            $application->client_id = $client->id;
+            $application->service_type = $service->id;
+            $application->application_status = 'NEW';
+            $application->save();
+
+            $progress = new ApplicationProgress();
+            $progress->application_id = $application->id;
+            $progress->application_created_at = now();
+            $progress->save();
+        }
+
+        $requirements = ServiceRequirement::query()
+            ->where('service_id', '=', $service->id)
+            ->get();
 
         return view('application-create', [
             'service' => $service,
             'client' => $client,
             'application' => $application,
+            'requirements' => $requirements,
         ]);
+    }
+
+    public function storeApplicationFiles(Request $request)
+    {
+        foreach ($request->files as $file) {
+            $fileName = time() . '.' . $file->guessExtension();
+
+            $file->move(public_path('files'), $fileName);
+
+            $file = new File();
+            $file->client_id = $request->input('client_id');
+            $file->application_id = $request->input('application_id');
+            $file->file_name = $fileName;
+            $file->file_type = $request->input('service_type');
+            $file->save();
+        }
+
+        $application = Application::query()
+            ->where('id', '=', $request->input('application_id'))
+            ->first();
+
+        $application->application_status = 'REVIEWING';
+        $application->save();
+
+        return redirect()->route('home', ['message' => 'Application Created Successfully']);
     }
 }
