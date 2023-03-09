@@ -17,7 +17,7 @@ class ApplicationController extends Controller
     public function applicationCreateView(Request $request): Factory|View|\Illuminate\Contracts\Foundation\Application
     {
         $service = Service::query()
-            ->where('id', '=', (int) $request->input('service_id'))
+            ->where('id', '=', (int)$request->input('service_id'))
             ->first();
 
         $client = Client::query()
@@ -77,5 +77,22 @@ class ApplicationController extends Controller
         $application->save();
 
         return redirect()->route('home', ['message' => 'Application Created Successfully']);
+    }
+
+    public function adminIndex(): Factory|View|\Illuminate\Contracts\Foundation\Application
+    {
+        $applications = Application::with(['client', 'service'])->get();
+
+        return view('admin.applications', ['applications' => $applications]);
+    }
+
+    public function adminShow(int $application_id): Factory|View|\Illuminate\Contracts\Foundation\Application
+    {
+        $application = Application::query()
+            ->with(['files', 'client', 'service'])
+            ->where('id', '=', $application_id)
+            ->first();
+
+        return view('admin.application-show', ['application' => $application]);
     }
 }

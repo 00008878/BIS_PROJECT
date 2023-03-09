@@ -21,6 +21,8 @@
         <li>{{ $client->patronymic }}</li>
         <li>{{ $client->phone }}</li>
         <li>{{ $client->client_status }}</li>
+        <li>{{ $client->created_at }}</li>
+        <li><a href="{{ route('admin.client.show', ['client_id' => $client->id]) }}">Show</a></li>
 
         <br>
     @endforeach

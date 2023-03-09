@@ -57,4 +57,14 @@ class ClientController extends Controller
 
         return view('admin.clients', ['clients' => $clients]);
     }
+
+    public function adminShow(int $client_id): Factory|View|Application
+    {
+        $client = Client::query()
+            ->with(['passport', 'files', 'mib', 'applications' => fn ($q) => $q->with('service')])
+            ->where('id', '=', $client_id)
+            ->first();
+
+        return view('admin.client-show', ['client' => $client]);
+    }
 }
