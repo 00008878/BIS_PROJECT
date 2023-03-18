@@ -7,7 +7,7 @@ use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Http\Client\RequestException;
 use App\HttpRepositories\MibHttpRepository\Responses\MibReportDTO;
 
-class MibHttpRepository
+class MibHttpRepository implements MibHttpRepositoryInterface
 {
     /**
      * @throws RequestException

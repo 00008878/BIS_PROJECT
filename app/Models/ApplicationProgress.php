@@ -12,11 +12,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  *
  * @property int $id
  * @property int $application_id
- * @property string|null $application_created_at
- * @property string|null $reviewed_at
- * @property string|null $approved_at
- * @property string|null $rejected_at
- * @property string|null $completed_at
+ * @property Carbon|null $application_created_at
+ * @property Carbon|null $reviewed_at
+ * @property Carbon|null $approved_at
+ * @property Carbon|null $rejected_at
+ * @property Carbon|null $completed_at
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @method static Builder|ApplicationProgress newModelQuery()

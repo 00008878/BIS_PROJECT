@@ -63,5 +63,6 @@ Route::middleware('auth')->group(function () {
         Route::get('applications', [ApplicationController::class, 'adminIndex']);
         Route::get('clients/{client_id}', [ClientController::class, 'adminShow'])->name('admin.client.show');
         Route::get('applications/{application_id}', [ApplicationController::class, 'adminShow'])->name('admin.application.show');
+        Route::post('applications/status/change', [ApplicationController::class, 'adminChangeApplicationStatus'])->name('application.status.change');
     });
 });

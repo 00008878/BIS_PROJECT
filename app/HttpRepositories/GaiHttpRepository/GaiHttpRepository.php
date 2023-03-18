@@ -7,7 +7,7 @@ use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Http\Client\RequestException;
 use App\HttpRepositories\GaiHttpRepository\Responses\GaiReportDTO;
 
-class GaiHttpRepository
+class GaiHttpRepository implements GaiHttpRepositoryInterface
 {
     /**
      * @throws RequestException

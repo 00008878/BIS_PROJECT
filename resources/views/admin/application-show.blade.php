@@ -1,5 +1,6 @@
 @php use App\Models\Application;
 use Illuminate\Support\Facades\Auth;
+/** @var Application $application */
 @endphp
 
     <!doctype html>
@@ -15,7 +16,23 @@ use Illuminate\Support\Facades\Auth;
 @if(isset($message))
     <h1>{{$message}}</h1>
 @endif
-@php /** @var Application $application */ @endphp
+
+<form action="{{ route('application.status.change') }}" method="POST">
+    @csrf
+    <input type="hidden" name="application_status" id="" value="APPROVE">
+    <input type="hidden" name="application_id" id="" value="{{ $application->id }}">
+
+    <button type="submit">Approve</button>
+</form>
+
+<form action="{{ route('application.status.change') }}" method="POST">
+    @csrf
+    <input type="hidden" name="application_status" id="" value="REJECT">
+    <input type="hidden" name="application_id" id="" value="{{ $application->id }}">
+
+    <button type="submit">REJECT</button>
+</form>
+
 <h1>{{ $application->client->name . ' ' . $application->client->surname . ' ' . $application->client->patronymic}}</h1>
 <p>{{ $application->application_status }}</p>
 <p>{{ $application->reject_reason}}</p>

@@ -30,9 +30,9 @@ class AuthController extends Controller
 
     public function signUp(SignUpRequest $request, SignUpUseCase $signUpUseCase): Factory|View|Application
     {
-        $response = $signUpUseCase->execute(SignUpDTO::fromArray($request->validated()));
+        $signUpUseCase->execute(SignUpDTO::fromArray($request->validated()));
 
-        return view('home', ['user' => $response]);
+        return view('client-register');
     }
 
     /**

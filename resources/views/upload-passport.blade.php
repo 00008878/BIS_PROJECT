@@ -13,6 +13,9 @@
 @if (Auth::check())
     <a href="/logout" class="btn btn-secondary">Выход</a>
 @endif
+@if(isset($message))
+    <h1>{{$message}}</h1>
+@endif
 <form method="POST" action="{{ route('client.upload-passport', ['client_id' => request()->route()->parameters['client_id']]) }}" class="form-signin" enctype="multipart/form-data">
     @csrf
     <h1 class="h3 mb-3 font-weight-normal">Please fill in the form</h1>

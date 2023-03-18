@@ -2,12 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
 use App\Models\Client;
 use App\Models\Passport;
 use Illuminate\Http\Request;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Contracts\View\Factory;
+use App\UseCases\Gai\GetGaiReportUseCase;
+use App\UseCases\Mib\GetMibReportUseCase;
 use Illuminate\Contracts\Foundation\Application;
 
 class ClientController extends Controller
@@ -17,7 +21,10 @@ class ClientController extends Controller
         return view('client-register');
     }
 
-    public function registration(Request $request)
+    /**
+     * @throws Exception
+     */
+    public function registration(Request $request, GetMibReportUseCase $getMibReportUseCase, GetGaiReportUseCase $getGaiReportUseCase): RedirectResponse
     {
         $client = new Client();
         $client->name = $request->input('name');
@@ -48,6 +55,10 @@ class ClientController extends Controller
         $passport->type = $request->input('type');
         $passport->save();
 
+//        $getMibReportUseCase->execute($passport->pinfl, $passport->client_id);
+
+//        $getGaiReportUseCase->execute($passport->pinfl, $passport->client_id);
+
         return redirect()->route('upload.passport', ['client_id' => $client->id]);
     }
 
@@ -61,7 +72,7 @@ class ClientController extends Controller
     public function adminShow(int $client_id): Factory|View|Application
     {
         $client = Client::query()
-            ->with(['passport', 'files', 'mib', 'applications' => fn ($q) => $q->with('service')])
+            ->with(['passport', 'files', 'mib', 'applications' => fn($q) => $q->with('service')])
             ->where('id', '=', $client_id)
             ->first();
 

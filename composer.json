@@ -6,13 +6,15 @@
     "license": "MIT",
     "require": {
         "php": "^8.0",
+        "elasticsearch/elasticsearch": "*",
         "fideloper/proxy": "^4.4",
         "friendsofphp/php-cs-fixer": "^3.14",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
         "laravel/framework": "^8.40",
         "laravel/sanctum": "2.15.1",
-        "laravel/tinker": "^2.5"
+        "laravel/tinker": "^2.5",
+        "myclabs/php-enum": "^1.8"
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^2.12",

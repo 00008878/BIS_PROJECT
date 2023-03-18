@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use App\Models\ServiceRequirement;
 use App\Models\ApplicationProgress;
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Contracts\View\Factory;
 
 class ApplicationController extends Controller
@@ -17,7 +18,7 @@ class ApplicationController extends Controller
     public function applicationCreateView(Request $request): Factory|View|\Illuminate\Contracts\Foundation\Application
     {
         $service = Service::query()
-            ->where('id', '=', (int)$request->input('service_id'))
+            ->where('id', '=', (int) $request->input('service_id'))
             ->first();
 
         $client = Client::query()
@@ -76,6 +77,14 @@ class ApplicationController extends Controller
         $application->application_status = 'REVIEWING';
         $application->save();
 
+        $progress = ApplicationProgress::query()
+            ->where('application_id', '=', $application->id)
+            ->first();
+
+        $progress->application_id = $application->id;
+        $progress->reviewed_at = now();
+        $progress->save();
+
         return redirect()->route('home', ['message' => 'Application Created Successfully']);
     }
 
@@ -94,5 +103,31 @@ class ApplicationController extends Controller
             ->first();
 
         return view('admin.application-show', ['application' => $application]);
+    }
+
+    public function adminChangeApplicationStatus(Request $request): RedirectResponse
+    {
+        $application = Application::query()->find($request->input('application_id'));
+
+        $application->application_status = $request->input('application_status');
+        $application->engaged_by_id = auth()->user()->id;
+        $application->engaged_at = now();
+        $application->save();
+
+        $progress = ApplicationProgress::query()
+            ->where('application_id', '=', $application->id)
+            ->first();
+
+        $progress->application_id = $application->id;
+
+        if ($request->input('application_status') === 'APPROVE') {
+            $progress->approved_at = now();
+        } else {
+            $progress->rejected_at = now();
+        }
+
+        $progress->save();
+
+        return redirect()->back();
     }
 }

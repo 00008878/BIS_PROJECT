@@ -39,6 +39,6 @@ class FileController extends Controller
             return redirect()->route('home');
         }
 
-        return redirect()->route('upload.passport', ['client_id' => $client_id]);
+        return redirect()->route('upload.passport', ['client_id' => $client_id, 'message' => 'Could not verify identification']);
     }
 }
