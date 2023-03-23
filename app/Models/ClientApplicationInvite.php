@@ -2,22 +2,23 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
  * App\Models\ClientApplicationInvite.
  *
  * @property int $id
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @method static \Illuminate\Database\Eloquent\Builder|ClientApplicationInvite newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|ClientApplicationInvite newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|ClientApplicationInvite query()
- * @method static \Illuminate\Database\Eloquent\Builder|ClientApplicationInvite whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ClientApplicationInvite whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ClientApplicationInvite whereUpdatedAt($value)
- * @mixin \Eloquent
+ * @property int $application_id
+ * @property int $from_client_id
+ * @property int $to_client_id
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @method static Builder|ClientApplicationInvite newModelQuery()
+ * @method static Builder|ClientApplicationInvite newQuery()
+ * @method static Builder|ClientApplicationInvite query()
  */
 class ClientApplicationInvite extends Model
 {

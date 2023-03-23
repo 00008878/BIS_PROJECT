@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Users;
 
 use Exception;
+use App\Models\Client;
 use App\DTO\Auth\SignInDTO;
 use App\DTO\Auth\SignUpDTO;
 use Illuminate\Contracts\View\View;
@@ -42,7 +43,11 @@ class AuthController extends Controller
     {
         $response = $signInUseCase->execute(SignInDTO::fromArray($request->validated()));
 
-        return view('home', ['user' => $response]);
+        $client = Client::query()
+            ->with('applications')
+            ->first();
+
+        return view('home', ['user' => $response, 'client' => $client]);
     }
 
     public function logout(): RedirectResponse

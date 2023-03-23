@@ -15,6 +15,9 @@
         @csrf
         <input type="hidden" name="application_id" value="{{ $application->id }}">
         <input type="hidden" name="client_id" value="{{ $application->client_id }}">
+
+        <label for="pinfl">Pinfl</label>
+        <input type="text" name="pinfl" id="pinfl" class="form-control">
         <button type="submit">Invite second person</button>
     </form>
 @endif

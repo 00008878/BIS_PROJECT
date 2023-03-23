@@ -14,5 +14,10 @@
 @endif
 <h1>Welcome, {{ auth()->user()->name }}</h1>
 <h3>Please, <a href="{{route('services.all')}}">enter</a> to create notary deed</h3>
+<h2>Applications</h2>
+@foreach($client->applications as $application)
+    <p>{{ $application->id }}</p>
+    <p>{{ $application->application_status }}</p>
+@endforeach
 </body>
 </html>

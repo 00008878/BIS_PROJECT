@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\FileController;
@@ -35,11 +36,15 @@ Route::get('/register', [AuthController::class, 'signUpView']);
 
 Route::middleware('auth')->group(function () {
     Route::get('/home', function (Request $request) {
+        $client = Client::query()
+            ->with('applications')
+            ->first();
+
         if ($request->query('message')) {
-            return view('home', ['message' => $request->query('message')]);
+            return view('home', ['message' => $request->query('message'), 'client' => $client]);
         }
 
-        return view('home');
+        return view('home', ['client' => $client]);
     })->name('home');
 
     Route::get('/passport-register', [ClientController::class, 'registrationView']);
@@ -56,10 +61,12 @@ Route::middleware('auth')->group(function () {
 
     Route::post('/application-create', [ApplicationController::class, 'applicationCreateView'])->name('application.create');
 
+    Route::post('/application-invite', [ApplicationController::class, 'applicationSendInvitation'])->name('application.invite');
+
     Route::post('/application-store', [ApplicationController::class, 'storeApplicationFiles'])->name('application.store');
 
     Route::prefix('admin')->group(function () {
-        Route::get('clients', [ClientController::class, 'adminIndex']);
+        Route::get('clients', [ClientController::class, 'adminIndex'])->name('admin.clients.index');
         Route::get('applications', [ApplicationController::class, 'adminIndex']);
         Route::get('clients/{client_id}', [ClientController::class, 'adminShow'])->name('admin.client.show');
         Route::get('applications/{application_id}', [ApplicationController::class, 'adminShow'])->name('admin.application.show');

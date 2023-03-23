@@ -12,7 +12,22 @@
 @if(isset($message))
     <h1>{{$message}}</h1>
 @endif
-<h1>Clients</h1>
+<h1><a href="{{ route('admin.clients.index') }}">Clients</a></h1>
+<form action="{{ route('admin.clients.index') }}" method="GET">
+    @csrf
+    <label for="search">Search</label>
+    <input type="text" name="q" id="search" class="form-control">
+
+    <select name="search_param" id="inputType" class="form-control pb-2">
+        <option value="phone">Phone</option>
+        <option value="client_id">Client ID</option>
+        <option value="pinfl">PINFL</option>
+        <option value="fio">FIO</option>
+        <option value="passport">Passport</option>
+    </select>
+
+    <button type="submit">Search</button>
+</form>
 <ul>
     @foreach($clients as $client)
         <li>{{ $client->id }}</li>

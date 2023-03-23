@@ -12,6 +12,7 @@ use App\Models\ApplicationProgress;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Contracts\View\Factory;
+use App\Models\ClientApplicationInvite;
 
 class ApplicationController extends Controller
 {
@@ -55,7 +56,24 @@ class ApplicationController extends Controller
         ]);
     }
 
-    public function storeApplicationFiles(Request $request)
+    public function applicationSendInvitation(Request $request)
+    {
+        $client = Client::query()
+            ->with('passport', function ($query) use ($request) {
+                $query->where('pinfl', $request->input('pinfl'));
+            })
+            ->first();
+
+        $invitation = new ClientApplicationInvite();
+        $invitation->application_id = $request->input('application_id');
+        $invitation->from_client_id = $request->input('client_id');
+        $invitation->to_client_id = $client->id;
+        $invitation->save();
+
+        return redirect()->back();
+    }
+
+    public function storeApplicationFiles(Request $request): RedirectResponse
     {
         foreach ($request->files as $file) {
             $fileName = time() . '.' . $file->guessExtension();

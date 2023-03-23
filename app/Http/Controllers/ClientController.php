@@ -6,6 +6,7 @@ use Exception;
 use App\Models\Client;
 use App\Models\Passport;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\RedirectResponse;
@@ -35,10 +36,8 @@ class ClientController extends Controller
         $client->birthdate = $request->input('birthdate');
         $client->gender = $request->input('gender');
         $client->user_id = Auth::id();
-        $client->save();
 
         $passport = new Passport();
-        $passport->client_id = $client->id;
         $passport->serial_number = $request->input('serial_number');
         $passport->pinfl = $request->input('pinfl');
         $passport->name = $client->name;
@@ -53,7 +52,13 @@ class ClientController extends Controller
         $passport->city_name = $request->input('city_name');
         $passport->nationality_name = $request->input('nationality_name');
         $passport->type = $request->input('type');
-        $passport->save();
+
+        DB::transaction(function () use ($client, $passport) {
+            $client->save();
+
+            $passport->client_id = $client->id;
+            $passport->save();
+        });
 
 //        $getMibReportUseCase->execute($passport->pinfl, $passport->client_id);
 
@@ -62,9 +67,11 @@ class ClientController extends Controller
         return redirect()->route('upload.passport', ['client_id' => $client->id]);
     }
 
-    public function adminIndex(): Factory|View|Application
+    public function adminIndex(Request $request): Factory|View|Application
     {
-        $clients = Client::all();
+        $clients = Client::query()
+            ->filterRequest($request)
+            ->get();
 
         return view('admin.clients', ['clients' => $clients]);
     }

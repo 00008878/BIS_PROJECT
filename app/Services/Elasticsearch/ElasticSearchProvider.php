@@ -2,9 +2,11 @@
 
 namespace App\Services\Elasticsearch;
 
+use Http\Promise\Promise;
 use Illuminate\Support\Arr;
 use Elastic\Elasticsearch\Client;
 use Elastic\Elasticsearch\ClientBuilder;
+use Elastic\Elasticsearch\Response\Elasticsearch;
 use App\Services\Elasticsearch\Enum\SearchTypesEnum;
 
 class ElasticSearchProvider
@@ -14,9 +16,9 @@ class ElasticSearchProvider
 
     public function __construct()
     {
-        $this->index = config('local_services.elasticsearch.index');
+        $this->index = config('services.elasticsearch.index');
         $this->httpClient = ClientBuilder::create()
-            ->setHosts([config('local_services.elasticsearch.host')])
+            ->setHosts([config('services.elasticsearch.host')])
             ->setBasicAuthentication('admin', 'admin')
             ->setSSLVerification(false)
             ->build();
@@ -27,9 +29,8 @@ class ElasticSearchProvider
      * NOTE: Pass an `id` within $data in order to make it changeable
      * Otherwise there will be duplicates in search result.
      * @param array $data - any data you want to add to index
-     * @return array
      */
-    public function createDocument(array $data): array
+    public function createDocument(array $data): Elasticsearch|Promise
     {
         $params = [
             'index' => $this->index,
@@ -49,9 +50,9 @@ class ElasticSearchProvider
      * Be sure to pass existing `id` of document, otherwise there
      * will be new document which may cause duplicates in search result.
      * @param array $data
-     * @return array
+     * @return Elasticsearch|Promise
      */
-    public function updateDocument(array $data): array
+    public function updateDocument(array $data): Elasticsearch|Promise
     {
         return $this->createDocument($data);
     }
@@ -60,9 +61,9 @@ class ElasticSearchProvider
      * Deletes index from ElasticSearch.
      *
      * @param array $data
-     * @return array
+     * @return Elasticsearch|Promise
      */
-    public function deleteDocument(array $data): array
+    public function deleteDocument(array $data): Elasticsearch|Promise
     {
         $params = [
             'index' => $this->index,
@@ -78,9 +79,9 @@ class ElasticSearchProvider
      * Bulk create indexed documents.
      *
      * @param array $documents
-     * @return array
+     * @return Elasticsearch|Promise
      */
-    public function bulkCreate(array $documents): array
+    public function bulkCreate(array $documents): Elasticsearch|Promise
     {
         $params = [];
         foreach ($documents as $document) {

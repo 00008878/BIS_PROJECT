@@ -17,7 +17,7 @@ class CreateServicesTable extends Migration
             $table->id();
             $table->string('category');
             $table->string('type');
-            $table->float('price');
+            $table->bigInteger('price');
             $table->boolean('two_sided');
             $table->timestamps();
         });

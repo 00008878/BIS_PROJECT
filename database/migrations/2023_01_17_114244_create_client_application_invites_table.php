@@ -15,6 +15,9 @@ class CreateClientApplicationInvitesTable extends Migration
     {
         Schema::create('client_application_invites', function (Blueprint $table) {
             $table->id();
+            $table->integer('application_id');
+            $table->integer('from_client_id');
+            $table->integer('to_client_id');
             $table->timestamps();
         });
     }

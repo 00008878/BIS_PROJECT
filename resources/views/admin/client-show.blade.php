@@ -1,5 +1,5 @@
 @php
-    use App\Models\Client;use Illuminate\Support\Facades\Auth;
+    use App\Models\Application;use App\Models\Client;use Illuminate\Support\Facades\Auth;
 @endphp
 
     <!doctype html>
@@ -15,7 +15,10 @@
 @if(isset($message))
     <h1>{{$message}}</h1>
 @endif
-@php /** @var Client $client */ @endphp
+@php
+    /** @var Client $client */
+    /** @var Application $application */
+@endphp
 <h1>{{ $client->name . ' ' . $client->surname . ' ' . $client->patronymic}}</h1>
 <p>{{ $client->client_status }}</p>
 <p>{{ $client->phone}}</p>
@@ -24,7 +27,11 @@
 @foreach($client->files as $file)
     <p><a href="{{ asset('files/' . $file->file_name) }}">{{ $file->file_name }}</a></p>
 @endforeach
-<p>{{ $client->application }}</p>
+@foreach($client->applications as $application)
+    <p>{{ $application->id }}</p>
+    <p><a href="{{ route('admin.application.show', ['application_id' => $application->id]) }}">Go</a></p>
+@endforeach
+
 @foreach($client->mib as $mib)
     <p>{{ $mib->debtor_name }}</p>
     <p>{{ $mib->debtor_pin }}</p>
