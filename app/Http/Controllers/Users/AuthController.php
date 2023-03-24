@@ -13,6 +13,7 @@ use App\UseCases\Auth\SignUpUseCase;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Contracts\View\Factory;
+use App\Models\ClientApplicationInvite;
 use App\Http\Requests\Auth\SignInRequest;
 use App\Http\Requests\Auth\SignUpRequest;
 use Illuminate\Contracts\Foundation\Application;
@@ -45,9 +46,14 @@ class AuthController extends Controller
 
         $client = Client::query()
             ->with('applications')
+            ->where('user_id', auth()->user()->id)
             ->first();
 
-        return view('home', ['user' => $response, 'client' => $client]);
+        $invitations = ClientApplicationInvite::query()
+            ->where('to_client_id', $client->id)
+            ->get();
+
+        return view('home', ['user' => $response, 'client' => $client, 'invitations' => $invitations]);
     }
 
     public function logout(): RedirectResponse

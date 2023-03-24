@@ -1,4 +1,6 @@
-@php use Illuminate\Support\Facades\Auth; @endphp
+@php
+    use App\Models\ClientApplicationInvite;
+@endphp
     <!doctype html>
 <html lang="en">
 <head>
@@ -19,5 +21,12 @@
     <p>{{ $application->id }}</p>
     <p>{{ $application->application_status }}</p>
 @endforeach
+@php /** @var ClientApplicationInvite $invitation */ @endphp
+<h2>Invitations</h2>
+@if(count($invitations) > 0)
+    @foreach($invitations as $invitation)
+        <a href="{{ route('application.session', ['application_id' => $invitation->application_id]) }}">Go to invitation</a>
+    @endforeach
+@endif
 </body>
 </html>

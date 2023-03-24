@@ -3,6 +3,7 @@
 use App\Models\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Models\ClientApplicationInvite;
 use App\Http\Controllers\FileController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\ServicesController;
@@ -38,13 +39,18 @@ Route::middleware('auth')->group(function () {
     Route::get('/home', function (Request $request) {
         $client = Client::query()
             ->with('applications')
+            ->where('user_id', auth()->user()->id)
             ->first();
 
+        $invitations = ClientApplicationInvite::query()
+            ->where('to_client_id', $client->id)
+            ->get();
+
         if ($request->query('message')) {
-            return view('home', ['message' => $request->query('message'), 'client' => $client]);
+            return view('home', ['message' => $request->query('message'), 'client' => $client, 'invitations' => $invitations]);
         }
 
-        return view('home', ['client' => $client]);
+        return view('home', ['client' => $client, 'invitations' => $invitations]);
     })->name('home');
 
     Route::get('/passport-register', [ClientController::class, 'registrationView']);
@@ -62,6 +68,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/application-create', [ApplicationController::class, 'applicationCreateView'])->name('application.create');
 
     Route::post('/application-invite', [ApplicationController::class, 'applicationSendInvitation'])->name('application.invite');
+
+    Route::get('/application-invite/{application_id}', [ApplicationController::class, 'applicationLinkFromInvitation'])->name('application.session');
 
     Route::post('/application-store', [ApplicationController::class, 'storeApplicationFiles'])->name('application.store');
 

@@ -10,7 +10,7 @@
 </head>
 <body>
 @if($service->two_sided)
-    <form action="" method="POST">
+    <form action="{{ route('application.invite') }}" method="POST">
         @php /** @var Application $application */ @endphp
         @csrf
         <input type="hidden" name="application_id" value="{{ $application->id }}">

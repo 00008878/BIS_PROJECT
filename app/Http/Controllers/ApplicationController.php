@@ -56,7 +56,7 @@ class ApplicationController extends Controller
         ]);
     }
 
-    public function applicationSendInvitation(Request $request)
+    public function applicationSendInvitation(Request $request): \Illuminate\Contracts\Foundation\Application|Factory|View
     {
         $client = Client::query()
             ->with('passport', function ($query) use ($request) {
@@ -70,7 +70,36 @@ class ApplicationController extends Controller
         $invitation->to_client_id = $client->id;
         $invitation->save();
 
-        return redirect()->back();
+        $application = Application::query()->find($request->input('application_id'));
+
+        $service = $application->service;
+
+        $requirements = $service->service_requirements;
+
+        return view('application-create', [
+            'service' => $service,
+            'client' => $client,
+            'application' => $application,
+            'requirements' => $requirements,
+        ]);
+    }
+
+    public function applicationLinkFromInvitation(int $application_id): Factory|View|\Illuminate\Contracts\Foundation\Application
+    {
+        $application = Application::query()->find($application_id);
+
+        $service = $application->service;
+
+        $client = $application->client;
+
+        $requirements = $service->service_requirements;
+
+        return view('application-create', [
+            'service' => $service,
+            'client' => $client,
+            'application' => $application,
+            'requirements' => $requirements,
+        ]);
     }
 
     public function storeApplicationFiles(Request $request): RedirectResponse
@@ -103,7 +132,20 @@ class ApplicationController extends Controller
         $progress->reviewed_at = now();
         $progress->save();
 
-        return redirect()->route('home', ['message' => 'Application Created Successfully']);
+        $client = Client::query()
+            ->with('applications')
+            ->where('user_id', auth()->user()->id)
+            ->first();
+
+        $invitations = ClientApplicationInvite::query()
+            ->where('to_client_id', $client->id)
+            ->get();
+
+        return redirect()->route('home', [
+                'message' => 'Application Created Successfully',
+                'client' => $client,
+                'invitations' => $invitations,
+            ]);
     }
 
     public function adminIndex(): Factory|View|\Illuminate\Contracts\Foundation\Application
