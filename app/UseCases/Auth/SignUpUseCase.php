@@ -12,8 +12,6 @@ class SignUpUseCase
     public function execute(SignUpDTO $request): array
     {
         $user = new User();
-        $user->name = $request->getName();
-        $user->surname = $request->getSurname();
         $user->email = $request->getEmail();
         $user->password = Hash::make($request->getPassword());
         $user->save();

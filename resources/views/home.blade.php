@@ -1,4 +1,5 @@
 @php
+    use App\Models\Client;
     use App\Models\ClientApplicationInvite;
 @endphp
     <!doctype html>
@@ -14,7 +15,7 @@
 @if(isset($message))
     <h1>{{$message}}</h1>
 @endif
-<h1>Welcome, {{ auth()->user()->name }}</h1>
+<h1>Welcome, {{ Client::query()->where('user_id', auth()->user()->id)->first()->name }}</h1>
 <h3>Please, <a href="{{route('services.all')}}">enter</a> to create notary deed</h3>
 <h2>Applications</h2>
 @foreach($client->applications as $application)
@@ -25,7 +26,8 @@
 <h2>Invitations</h2>
 @if(count($invitations) > 0)
     @foreach($invitations as $invitation)
-        <a href="{{ route('application.session', ['application_id' => $invitation->application_id]) }}">Go to invitation</a>
+        <a href="{{ route('application.session', ['application_id' => $invitation->application_id]) }}">Go to
+            invitation</a>
     @endforeach
 @endif
 </body>
