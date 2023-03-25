@@ -22,7 +22,7 @@ use App\Http\Controllers\ApplicationController;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('test');
 });
 
 Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
