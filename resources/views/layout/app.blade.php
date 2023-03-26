@@ -1,4 +1,5 @@
-<!DOCTYPE html>
+@php use App\Models\Client; @endphp
+    <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
@@ -6,7 +7,8 @@
     <title>Notary</title>
 
     <!-- Google Font: Source Sans Pro -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="{{ asset('adminlte/css/all.min.css') }}">
     <!-- Theme style -->
@@ -33,7 +35,8 @@
                 <div class="navbar-search-block">
                     <form class="form-inline">
                         <div class="input-group input-group-sm">
-                            <input class="form-control form-control-navbar" type="search" placeholder="Search" aria-label="Search">
+                            <input class="form-control form-control-navbar" type="search" placeholder="Search"
+                                   aria-label="Search">
                             <div class="input-group-append">
                                 <button class="btn btn-navbar" type="submit">
                                     <i class="fas fa-search"></i>
@@ -62,14 +65,20 @@
             <!-- Sidebar user (optional) -->
             <div class="user-panel mt-3 pb-3 mb-3 d-flex">
                 <div class="info">
-                    <a href="#" class="d-block">Alexander Pierce</a>
+                    <a href="#" class="d-block">
+                        @php
+                            $client = Client::query()->where('user_id', auth()->user()->id)->first();
+                        @endphp
+                        {{ $client->name . ' ' . $client->surname }}
+                    </a>
                 </div>
             </div>
 
             <!-- SidebarSearch Form -->
             <div class="form-inline">
                 <div class="input-group" data-widget="sidebar-search">
-                    <input class="form-control form-control-sidebar" type="search" placeholder="Search" aria-label="Search">
+                    <input class="form-control form-control-sidebar" type="search" placeholder="Search"
+                           aria-label="Search">
                     <div class="input-group-append">
                         <button class="btn btn-sidebar">Go</button>
                     </div>
@@ -78,7 +87,8 @@
 
             <!-- Sidebar Menu -->
             <nav class="mt-2">
-                <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
+                    data-accordion="false">
                     <!-- Add icons to the links using the .nav-icon class
                          with font-awesome or any other icon font library -->
                     <li class="nav-item">

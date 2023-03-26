@@ -1,17 +1,20 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Test</title>
-</head>
-<body>
-<ul>
-    @foreach($services as $service)
-        <li><a href="{{ route('services.show', ['id' => $service->id]) }}">{{$service->type}}</a></li>
+@php
+    use Illuminate\Support\Collection;
+    use App\Models\Service;
+@endphp
+
+@extends('layout.app')
+
+@section('content')
+
+    @php /** @var Collection|Service[] $services */ @endphp
+    @foreach(Service::query()->select('category')->distinct()->get() as $category)
+        <h3>{{ $category->category }}</h3>
+        <ul>
+            @foreach($services->where('category', $category->category) as $service)
+                <li><a href="{{ route('services.show', ['id' => $service->id]) }}">{{$service->type}}</a></li>
+            @endforeach
+        </ul>
     @endforeach
-</ul>
-</body>
-</html>
+
+@endsection
