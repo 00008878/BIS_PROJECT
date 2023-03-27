@@ -8,6 +8,7 @@ use App\Models\Service;
 use App\Models\Application;
 use Illuminate\Http\Request;
 use App\Models\ServiceRequirement;
+use Illuminate\Support\Facades\DB;
 use App\Models\ApplicationProgress;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
@@ -68,6 +69,7 @@ class ApplicationController extends Controller
         $invitation->application_id = $request->input('application_id');
         $invitation->from_client_id = $request->input('client_id');
         $invitation->to_client_id = $client->id;
+        $invitation->active = true;
         $invitation->save();
 
         $application = Application::query()->find($request->input('application_id'));
@@ -122,7 +124,6 @@ class ApplicationController extends Controller
             ->first();
 
         $application->application_status = 'REVIEWING';
-        $application->save();
 
         $progress = ApplicationProgress::query()
             ->where('application_id', '=', $application->id)
@@ -130,7 +131,20 @@ class ApplicationController extends Controller
 
         $progress->application_id = $application->id;
         $progress->reviewed_at = now();
-        $progress->save();
+
+        $invitation = ClientApplicationInvite::query()
+            ->where('application_id', $application->id)
+            ->first();
+
+        if ($invitation !== null) {
+            $invitation->active = false;
+        }
+
+        DB::transaction(function () use ($application, $progress, $invitation) {
+            $application->save();
+            $progress->save();
+            $invitation?->save();
+        });
 
         $client = Client::query()
             ->with('applications')
@@ -139,6 +153,7 @@ class ApplicationController extends Controller
 
         $invitations = ClientApplicationInvite::query()
             ->where('to_client_id', $client->id)
+            ->where('active', true)
             ->get();
 
         return redirect()->route('home', [

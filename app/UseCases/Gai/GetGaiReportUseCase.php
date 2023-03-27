@@ -5,12 +5,12 @@ namespace App\UseCases\Gai;
 use Exception;
 use App\Models\GaiReport;
 use Illuminate\Http\Client\RequestException;
-use App\HttpRepositories\GaiHttpRepository\GaiHttpRepository;
+use App\HttpRepositories\GaiHttpRepository\GaiHttpRepositoryInterface;
 
 class GetGaiReportUseCase
 {
     public function __construct(
-        private GaiHttpRepository $gaiHttpRepository
+        private GaiHttpRepositoryInterface $gaiHttpRepository
     )
     {
     }

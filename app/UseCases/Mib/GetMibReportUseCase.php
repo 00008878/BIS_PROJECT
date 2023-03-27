@@ -5,12 +5,12 @@ namespace App\UseCases\Mib;
 use Exception;
 use App\Models\MibReport;
 use Illuminate\Http\Client\RequestException;
-use App\HttpRepositories\MibHttpRepository\MibHttpRepository;
+use App\HttpRepositories\MibHttpRepository\MibHttpRepositoryInterface;
 
 class GetMibReportUseCase
 {
     public function __construct(
-        private MibHttpRepository $mibHttpRepository
+        private MibHttpRepositoryInterface $mibHttpRepository
     )
     {
     }

@@ -2,16 +2,10 @@
     use App\Models\Application;use App\Models\Client;use Illuminate\Support\Facades\Auth;
 @endphp
 
-    <!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Test</title>
-</head>
-<body>
+@extends('layout.app')
+
+@section('content')
+
 @if(isset($message))
     <h1>{{$message}}</h1>
 @endif
@@ -20,27 +14,37 @@
     /** @var Application $application */
 @endphp
 <h1>{{ $client->name . ' ' . $client->surname . ' ' . $client->patronymic}}</h1>
-<p>{{ $client->client_status }}</p>
-<p>{{ $client->phone}}</p>
-<p>{{ $client->birthdate}}</p>
-<p>{{ $client->gender}}</p>
-@foreach($client->files as $file)
-    <p><a href="{{ asset('files/' . $file->file_name) }}">{{ $file->file_name }}</a></p>
-@endforeach
-@foreach($client->applications as $application)
-    <p>{{ $application->id }}</p>
-    <p><a href="{{ route('admin.application.show', ['application_id' => $application->id]) }}">Go</a></p>
-@endforeach
+<div class="col-6 mt-4">
+    <div class="d-flex justify-content-between" style="border-bottom: 2px solid slategrey">
+        <h5><a href="{{ route('admin.client.show.passport', ['client_id' => $client->id]) }}" style="color: slategrey">Passport</a></h5>
+        <h5><a href="{{ route('admin.client.show.applications', ['client_id' => $client->id]) }}" style="color: slategrey">Applications</a></h5>
+        <h5><a href="{{ route('admin.client.show.files', ['client_id' => $client->id]) }}" style="color: slategrey">Files</a></h5>
+        <h5><a href="{{ route('admin.client.show.reports.mib', ['client_id' => $client->id]) }}" style="color: slategrey">Reports</a></h5>
+    </div>
+</div>
 
-@foreach($client->mib as $mib)
-    <p>{{ $mib->debtor_name }}</p>
-    <p>{{ $mib->debtor_pin }}</p>
-    <p>{{ $mib->total_debt_sum }}</p>
-    <p>{{ $mib->debt_type }}</p>
-@endforeach
-<p>{{ $client->passport }}</p>
-<p>{{ $client->created_at }}</p>
-<p>{{ $client->updated_at }}</p>
+@yield('client-show')
 
-</body>
-</html>
+@endsection
+
+
+{{--<p>{{ $client->phone}}</p>--}}
+{{--<p>{{ $client->birthdate}}</p>--}}
+{{--<p>{{ $client->gender}}</p>--}}
+{{--@foreach($client->files as $file)--}}
+{{--    <p><a href="{{ asset('files/' . $file->file_name) }}">{{ $file->file_name }}</a></p>--}}
+{{--@endforeach--}}
+{{--@foreach($client->applications as $application)--}}
+{{--    <p>{{ $application->id }}</p>--}}
+{{--    <p><a href="{{ route('admin.application.show', ['application_id' => $application->id]) }}">Go</a></p>--}}
+{{--@endforeach--}}
+
+{{--@foreach($client->mib as $mib)--}}
+{{--    <p>{{ $mib->debtor_name }}</p>--}}
+{{--    <p>{{ $mib->debtor_pin }}</p>--}}
+{{--    <p>{{ $mib->total_debt_sum }}</p>--}}
+{{--    <p>{{ $mib->debt_type }}</p>--}}
+{{--@endforeach--}}
+{{--<p>{{ $client->passport }}</p>--}}
+{{--<p>{{ $client->created_at }}</p>--}}
+{{--<p>{{ $client->updated_at }}</p>--}}

@@ -18,6 +18,7 @@ class CreateClientApplicationInvitesTable extends Migration
             $table->integer('application_id');
             $table->integer('from_client_id');
             $table->integer('to_client_id');
+            $table->boolean('active');
             $table->timestamps();
         });
     }

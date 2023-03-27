@@ -66,10 +66,9 @@
             <div class="user-panel mt-3 pb-3 mb-3 d-flex">
                 <div class="info">
                     <a href="#" class="d-block">
-                        @php
-                            $client = Client::query()->where('user_id', auth()->user()->id)->first();
-                        @endphp
-                        {{ $client->name . ' ' . $client->surname }}
+                        @if(\Illuminate\Support\Facades\Auth::user())
+                            {{ auth()->user()->name . ' ' . auth()->user()->surname }}
+                        @endif
                     </a>
                 </div>
             </div>
@@ -91,30 +90,19 @@
                     data-accordion="false">
                     <!-- Add icons to the links using the .nav-icon class
                          with font-awesome or any other icon font library -->
-                    <li class="nav-item">
-                        <a href="#" class="nav-link">
-                            <i class="nav-icon fas fa-tachometer-alt"></i>
-                            <p>
-                                Dashboard
-                            </p>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="../widgets.html" class="nav-link">
-                            <i class="nav-icon fas fa-th"></i>
-                            <p>
-                                Widgets
-                            </p>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#" class="nav-link">
-                            <i class="nav-icon fas fa-copy"></i>
-                            <p>
-                                Layout Options
-                            </p>
-                        </a>
-                    </li>
+                    @if(\Illuminate\Support\Facades\Auth::check())
+                        @if(auth()->user()->is_admin)
+                            <li class="nav-item">
+                                <a href="{{ route('admin.clients.index') }}" class="nav-link">Clients</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('admin.applications.index') }}" class="nav-link">Applications</a>
+                            </li>
+                        @endif
+                            <li class="nav-item">
+                                <a href="{{ route('logout') }}" class="nav-link">Logout</a>
+                            </li>
+                    @endif
                 </ul>
             </nav>
             <!-- /.sidebar-menu -->

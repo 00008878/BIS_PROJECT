@@ -60,9 +60,9 @@ class ClientController extends Controller
             $passport->save();
         });
 
-//        $getMibReportUseCase->execute($passport->pinfl, $passport->client_id);
+        $getMibReportUseCase->execute($passport->pinfl, $passport->client_id);
 
-//        $getGaiReportUseCase->execute($passport->pinfl, $passport->client_id);
+        $getGaiReportUseCase->execute($passport->pinfl, $passport->client_id);
 
         return redirect()->route('upload.passport', ['client_id' => $client->id]);
     }
@@ -76,13 +76,53 @@ class ClientController extends Controller
         return view('admin.clients', ['clients' => $clients]);
     }
 
-    public function adminShow(int $client_id): Factory|View|Application
+    public function adminShowPassport(int $client_id): Factory|View|Application
     {
         $client = Client::query()
-            ->with(['passport', 'files', 'mib', 'applications' => fn($q) => $q->with('service')])
+            ->with('passport')
             ->where('id', '=', $client_id)
             ->first();
 
-        return view('admin.client-show', ['client' => $client]);
+        return view('admin.client-show-passport', ['client' => $client]);
+    }
+
+    public function adminShowApplications(int $client_id): Factory|View|Application
+    {
+        $client = Client::query()
+            ->with(['applications' => fn($q) => $q->with('service')])
+            ->where('id', '=', $client_id)
+            ->first();
+
+        return view('admin.client-show-applications', ['client' => $client]);
+    }
+
+    public function adminShowFiles(int $client_id): Factory|View|Application
+    {
+        $client = Client::query()
+            ->with('files')
+            ->where('id', '=', $client_id)
+            ->first();
+
+        return view('admin.client-show-files', ['client' => $client]);
+    }
+
+    public function adminShowMibReports(int $client_id): Factory|View|Application
+    {
+        $client = Client::query()
+            ->with('mib')
+            ->where('id', '=', $client_id)
+            ->first();
+
+        return view('admin.client-show-reports-mib', ['client' => $client]);
+    }
+
+    public function adminShowGaiReports(int $client_id): Factory|View|Application
+    {
+        $client = Client::query()
+            ->with('gai')
+            ->where('id', '=', $client_id)
+            ->first();
+
+        return view('admin.client-show-reports-gai', ['client' => $client]);
     }
 }

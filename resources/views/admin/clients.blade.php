@@ -1,24 +1,19 @@
 @php use Illuminate\Support\Facades\Auth; @endphp
-    <!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Test</title>
-</head>
-<body>
+
+@extends('layout.app')
+
+@section('content')
+
 @if(isset($message))
     <h1>{{$message}}</h1>
 @endif
 <h1><a href="{{ route('admin.clients.index') }}">Clients</a></h1>
-<form action="{{ route('admin.clients.index') }}" method="GET">
+<h3>Search</h3>
+<form action="{{ route('admin.clients.index') }}" method="GET" class="col-md-6 d-flex">
     @csrf
-    <label for="search">Search</label>
-    <input type="text" name="q" id="search" class="form-control">
+    <input type="text" name="q" id="search" class="form-control mr-3">
 
-    <select name="search_param" id="inputType" class="form-control pb-2">
+    <select name="search_param" id="inputType" class="form-control pb-2 col-2 mr-3">
         <option value="phone">Phone</option>
         <option value="client_id">Client ID</option>
         <option value="pinfl">PINFL</option>
@@ -26,22 +21,35 @@
         <option value="passport">Passport</option>
     </select>
 
-    <button type="submit">Search</button>
+    <button type="submit" class="btn btn-primary">Search</button>
 </form>
-<ul>
+<table class="table table-hover mt-4">
+    <thead class="thead-dark">
+    <tr>
+        <th scope="col">ID</th>
+        <th scope="col">Name</th>
+        <th scope="col">Surname</th>
+        <th scope="col">Patronymic</th>
+        <th scope="col">Phone</th>
+        <th scope="col">Client Status</th>
+        <th scope="col">Created Date</th>
+        <th scope="col">Action</th>
+    </tr>
+    </thead>
+    <tbody>
     @foreach($clients as $client)
-        <li>{{ $client->id }}</li>
-        <li>{{ $client->name }}</li>
-        <li>{{ $client->surname }}</li>
-        <li>{{ $client->patronymic }}</li>
-        <li>{{ $client->phone }}</li>
-        <li>{{ $client->client_status }}</li>
-        <li>{{ $client->created_at }}</li>
-        <li><a href="{{ route('admin.client.show', ['client_id' => $client->id]) }}">Show</a></li>
-
-        <br>
+        <tr>
+            <td>{{ $client->id }}</td>
+            <td>{{ $client->name }}</td>
+            <td>{{ $client->surname }}</td>
+            <td>{{ $client->patronymic }}</td>
+            <td>{{ $client->phone }}</td>
+            <td>{{ $client->client_status }}</td>
+            <td>{{ $client->created_at }}</td>
+            <td><a href="{{ route('admin.client.show.passport', ['client_id' => $client->id]) }}" class="btn btn-primary">Show</a></td>
+        </tr>
     @endforeach
-</ul>
+    </tbody>
+</table>
 
-</body>
-</html>
+@endsection

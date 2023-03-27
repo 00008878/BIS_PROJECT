@@ -56,6 +56,11 @@ class Client extends Model
         return $this->hasMany(MibReport::class);
     }
 
+    public function gai(): HasMany
+    {
+        return $this->hasMany(GaiReport::class);
+    }
+
     public function applications(): HasMany
     {
         return $this->hasMany(Application::class);

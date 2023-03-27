@@ -23,7 +23,9 @@
                             <label for="exampleInputPassword1">Password</label>
                             <input type="password" name="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
                         </div>
+                    <p>If you don't have account, <a href="{{ route('register') }}">register</a></p>
                     </div>
+
                     <!-- /.card-body -->
 
                     <div class="card-footer">

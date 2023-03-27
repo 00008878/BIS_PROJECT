@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property int $application_id
  * @property int $from_client_id
  * @property int $to_client_id
+ * @property bool $active
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @method static Builder|ClientApplicationInvite newModelQuery()

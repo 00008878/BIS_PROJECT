@@ -33,7 +33,7 @@ Route::get('/login', [AuthController::class, 'signInView']);
 
 Route::post('/register', [AuthController::class, 'signUp'])->name('signup');
 
-Route::get('/register', [AuthController::class, 'signUpView']);
+Route::get('/register', [AuthController::class, 'signUpView'])->name('register');
 
 Route::middleware('auth')->group(function () {
     Route::get('/home', function (Request $request) {
@@ -44,6 +44,7 @@ Route::middleware('auth')->group(function () {
 
         $invitations = ClientApplicationInvite::query()
             ->where('to_client_id', $client->id)
+            ->where('active', true)
             ->get();
 
         if ($request->query('message')) {
@@ -74,9 +75,16 @@ Route::middleware('auth')->group(function () {
     Route::post('/application-store', [ApplicationController::class, 'storeApplicationFiles'])->name('application.store');
 
     Route::prefix('admin')->group(function () {
-        Route::get('clients', [ClientController::class, 'adminIndex'])->name('admin.clients.index');
-        Route::get('applications', [ApplicationController::class, 'adminIndex']);
-        Route::get('clients/{client_id}', [ClientController::class, 'adminShow'])->name('admin.client.show');
+        Route::prefix('clients')->group(function () {
+            Route::get('/', [ClientController::class, 'adminIndex'])->name('admin.clients.index');
+            Route::get('/{client_id}/passport', [ClientController::class, 'adminShowPassport'])->name('admin.client.show.passport');
+            Route::get('/{client_id}/applications', [ClientController::class, 'adminShowApplications'])->name('admin.client.show.applications');
+            Route::get('/{client_id}/files', [ClientController::class, 'adminShowFiles'])->name('admin.client.show.files');
+            Route::get('/{client_id}/reports/mib', [ClientController::class, 'adminShowMibReports'])->name('admin.client.show.reports.mib');
+            Route::get('/{client_id}/reports/gai', [ClientController::class, 'adminShowGaiReports'])->name('admin.client.show.reports.gai');
+        });
+
+        Route::get('applications', [ApplicationController::class, 'adminIndex'])->name('admin.applications.index');
         Route::get('applications/{application_id}', [ApplicationController::class, 'adminShow'])->name('admin.application.show');
         Route::post('applications/status/change', [ApplicationController::class, 'adminChangeApplicationStatus'])->name('application.status.change');
     });
