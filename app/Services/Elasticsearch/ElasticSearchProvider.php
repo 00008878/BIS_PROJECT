@@ -194,7 +194,7 @@ class ElasticSearchProvider
                         ],
                         'analyzer' => 'standard',
                         'fuzziness' => 1,
-                        'minimum_should_match' => 2,
+                        'minimum_should_match' => 1,
                     ],
                 ],
                 'size' => 50,

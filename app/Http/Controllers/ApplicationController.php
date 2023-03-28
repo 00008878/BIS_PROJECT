@@ -60,9 +60,9 @@ class ApplicationController extends Controller
     public function applicationSendInvitation(Request $request): \Illuminate\Contracts\Foundation\Application|Factory|View
     {
         $client = Client::query()
-            ->with('passport', function ($query) use ($request) {
-                $query->where('pinfl', $request->input('pinfl'));
-            })
+            ->select('clients.*')
+            ->join('passports', 'clients.id', '=', 'passports.client_id')
+            ->where('passports.pinfl', '=', $request->input('pinfl'))
             ->first();
 
         $invitation = new ClientApplicationInvite();
@@ -137,7 +137,9 @@ class ApplicationController extends Controller
             ->first();
 
         if ($invitation !== null) {
-            $invitation->active = false;
+            if ($application->client_id !== $invitation->from_client_id) {
+                $invitation->active = false;
+            }
         }
 
         DB::transaction(function () use ($application, $progress, $invitation) {
@@ -153,7 +155,6 @@ class ApplicationController extends Controller
 
         $invitations = ClientApplicationInvite::query()
             ->where('to_client_id', $client->id)
-            ->where('active', true)
             ->get();
 
         return redirect()->route('home', [

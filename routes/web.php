@@ -7,6 +7,7 @@ use App\Models\ClientApplicationInvite;
 use App\Http\Controllers\FileController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\ServicesController;
+use App\Http\Middleware\AdminAuthMiddleware;
 use App\Http\Controllers\Users\AuthController;
 use App\Http\Controllers\ApplicationController;
 
@@ -44,7 +45,6 @@ Route::middleware('auth')->group(function () {
 
         $invitations = ClientApplicationInvite::query()
             ->where('to_client_id', $client->id)
-            ->where('active', true)
             ->get();
 
         if ($request->query('message')) {
@@ -74,7 +74,7 @@ Route::middleware('auth')->group(function () {
 
     Route::post('/application-store', [ApplicationController::class, 'storeApplicationFiles'])->name('application.store');
 
-    Route::prefix('admin')->group(function () {
+    Route::middleware(AdminAuthMiddleware::class)->prefix('admin')->group(function () {
         Route::prefix('clients')->group(function () {
             Route::get('/', [ClientController::class, 'adminIndex'])->name('admin.clients.index');
             Route::get('/{client_id}/passport', [ClientController::class, 'adminShowPassport'])->name('admin.client.show.passport');

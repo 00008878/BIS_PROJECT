@@ -51,7 +51,6 @@ class AuthController extends Controller
 
         $invitations = ClientApplicationInvite::query()
             ->where('to_client_id', $client->id)
-            ->where('active', true)
             ->get();
 
         return view('home', ['user' => $response, 'client' => $client, 'invitations' => $invitations]);
