@@ -2,91 +2,39 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\File;
-use App\Models\Client;
-use App\Models\Service;
 use App\Models\Application;
 use Illuminate\Http\Request;
-use App\Models\ServiceRequirement;
-use Illuminate\Support\Facades\DB;
-use App\Models\ApplicationProgress;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Contracts\View\Factory;
-use App\Models\ClientApplicationInvite;
+use App\DTO\Applications\ApplicationSendInviteDTO;
+use App\UseCases\Applications\StoreApplicationFilesUseCase;
+use App\UseCases\Applications\ChangeApplicationStatusUseCase;
+use App\UseCases\Applications\ApplicationSendInvitationUseCase;
+use App\UseCases\Applications\GetApplicationsCreateViewUseCase;
+use Illuminate\Contracts\Foundation\Application as ApplicationIlluminate;
 
 class ApplicationController extends Controller
 {
-    public function applicationCreateView(Request $request): Factory|View|\Illuminate\Contracts\Foundation\Application
+    public function applicationCreateView(Request $request, GetApplicationsCreateViewUseCase $getApplicationsCreateViewUseCase): Factory|View|ApplicationIlluminate
     {
-        $service = Service::query()
-            ->where('id', '=', (int) $request->input('service_id'))
-            ->first();
+        $result = $getApplicationsCreateViewUseCase->execute((int) $request->input('service_id'));
 
-        $client = Client::query()
-            ->where('user_id', '=', auth()->user()->id)
-            ->first();
-
-        $application = Application::query()
-            ->where('client_id', '=', $client->id)
-            ->where('application_status', '=', 'NEW')
-            ->first();
-
-        if ($application === null) {
-            $application = new Application();
-            $application->client_id = $client->id;
-            $application->service_type = $service->id;
-            $application->application_status = 'NEW';
-            $application->save();
-
-            $progress = new ApplicationProgress();
-            $progress->application_id = $application->id;
-            $progress->application_created_at = now();
-            $progress->save();
-        }
-
-        $requirements = ServiceRequirement::query()
-            ->where('service_id', '=', $service->id)
-            ->get();
-
-        return view('application-create', [
-            'service' => $service,
-            'client' => $client,
-            'application' => $application,
-            'requirements' => $requirements,
-        ]);
+        return view('application-create', $result);
     }
 
-    public function applicationSendInvitation(Request $request): \Illuminate\Contracts\Foundation\Application|Factory|View
+    public function applicationSendInvitation(Request $request, ApplicationSendInvitationUseCase $applicationSendInvitationUseCase): ApplicationIlluminate|Factory|View
     {
-        $client = Client::query()
-            ->select('clients.*')
-            ->join('passports', 'clients.id', '=', 'passports.client_id')
-            ->where('passports.pinfl', '=', $request->input('pinfl'))
-            ->first();
+       $result = $applicationSendInvitationUseCase->execute(ApplicationSendInviteDTO::fromArray([
+           $request->input('pinfl'),
+           $request->input('application_id'),
+           $request->input('client_id'),
+       ]));
 
-        $invitation = new ClientApplicationInvite();
-        $invitation->application_id = $request->input('application_id');
-        $invitation->from_client_id = $request->input('client_id');
-        $invitation->to_client_id = $client->id;
-        $invitation->active = true;
-        $invitation->save();
-
-        $application = Application::query()->find($request->input('application_id'));
-
-        $service = $application->service;
-
-        $requirements = $service->service_requirements;
-
-        return view('application-create', [
-            'service' => $service,
-            'client' => $client,
-            'application' => $application,
-            'requirements' => $requirements,
-        ]);
+        return view('application-create', $result);
     }
 
-    public function applicationLinkFromInvitation(int $application_id): Factory|View|\Illuminate\Contracts\Foundation\Application
+    public function applicationLinkFromInvitation(int $application_id): Factory|View|ApplicationIlluminate
     {
         $application = Application::query()->find($application_id);
 
@@ -104,74 +52,21 @@ class ApplicationController extends Controller
         ]);
     }
 
-    public function storeApplicationFiles(Request $request): RedirectResponse
+    public function storeApplicationFiles(Request $request, StoreApplicationFilesUseCase $storeApplicationFilesUseCase): RedirectResponse
     {
-        foreach ($request->files as $file) {
-            $fileName = time() . '.' . $file->guessExtension();
+        $result = $storeApplicationFilesUseCase->execute($request);
 
-            $file->move(public_path('files'), $fileName);
-
-            $file = new File();
-            $file->client_id = $request->input('client_id');
-            $file->application_id = $request->input('application_id');
-            $file->file_name = $fileName;
-            $file->file_type = $request->input('service_type');
-            $file->save();
-        }
-
-        $application = Application::query()
-            ->where('id', '=', $request->input('application_id'))
-            ->first();
-
-        $application->application_status = 'REVIEWING';
-
-        $progress = ApplicationProgress::query()
-            ->where('application_id', '=', $application->id)
-            ->first();
-
-        $progress->application_id = $application->id;
-        $progress->reviewed_at = now();
-
-        $invitation = ClientApplicationInvite::query()
-            ->where('application_id', $application->id)
-            ->first();
-
-        if ($invitation !== null) {
-            if ($application->client_id !== $invitation->from_client_id) {
-                $invitation->active = false;
-            }
-        }
-
-        DB::transaction(function () use ($application, $progress, $invitation) {
-            $application->save();
-            $progress->save();
-            $invitation?->save();
-        });
-
-        $client = Client::query()
-            ->with('applications')
-            ->where('user_id', auth()->user()->id)
-            ->first();
-
-        $invitations = ClientApplicationInvite::query()
-            ->where('to_client_id', $client->id)
-            ->get();
-
-        return redirect()->route('home', [
-                'message' => 'Application Created Successfully',
-                'client' => $client,
-                'invitations' => $invitations,
-            ]);
+        return redirect()->route('home', $result);
     }
 
-    public function adminIndex(): Factory|View|\Illuminate\Contracts\Foundation\Application
+    public function adminIndex(): Factory|View|ApplicationIlluminate
     {
         $applications = Application::with(['client', 'service'])->get();
 
         return view('admin.applications', ['applications' => $applications]);
     }
 
-    public function adminShow(int $application_id): Factory|View|\Illuminate\Contracts\Foundation\Application
+    public function adminShow(int $application_id): Factory|View|ApplicationIlluminate
     {
         $application = Application::query()
             ->with(['files', 'client', 'service'])
@@ -181,28 +76,9 @@ class ApplicationController extends Controller
         return view('admin.application-show', ['application' => $application]);
     }
 
-    public function adminChangeApplicationStatus(Request $request): RedirectResponse
+    public function adminChangeApplicationStatus(Request $request, ChangeApplicationStatusUseCase $changeApplicationStatusUseCase): RedirectResponse
     {
-        $application = Application::query()->find($request->input('application_id'));
-
-        $application->application_status = $request->input('application_status');
-        $application->engaged_by_id = auth()->user()->id;
-        $application->engaged_at = now();
-        $application->save();
-
-        $progress = ApplicationProgress::query()
-            ->where('application_id', '=', $application->id)
-            ->first();
-
-        $progress->application_id = $application->id;
-
-        if ($request->input('application_status') === 'APPROVE') {
-            $progress->approved_at = now();
-        } else {
-            $progress->rejected_at = now();
-        }
-
-        $progress->save();
+        $changeApplicationStatusUseCase->execute($request->input('application_id'), $request->input('application_status'));
 
         return redirect()->back();
     }

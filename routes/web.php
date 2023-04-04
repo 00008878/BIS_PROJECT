@@ -90,9 +90,9 @@ Route::middleware('auth')->group(function () {
     });
 });
 
-Route::get('test', function (\App\HttpRepositories\Centrifugo\CentrifugoHttpRepository $centrifugoHttpRepository) {
+Route::get('test', function (App\HttpRepositories\Centrifugo\CentrifugoHttpRepository $centrifugoHttpRepository) {
     $data = [
-        'test' => 'test'
+        'test' => 'test',
     ];
 
     $centrifugoHttpRepository->publish($data, 'channel');
