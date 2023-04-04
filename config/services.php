@@ -34,4 +34,9 @@ return [
         'index' => env('ELASTICSEARCH_INDEX'),
         'host' => env('ELASTICSEARCH_HOST'),
     ],
+
+    'centrifugo' => [
+        'domain' => env('CENTRIFUGO_DOMAIN'),
+        'auth_api_key' => env('CENTRIFUGO_AUTH_API_KEY'),
+    ],
 ];

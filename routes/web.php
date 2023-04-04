@@ -89,3 +89,15 @@ Route::middleware('auth')->group(function () {
         Route::post('applications/status/change', [ApplicationController::class, 'adminChangeApplicationStatus'])->name('application.status.change');
     });
 });
+
+Route::get('test', function (\App\HttpRepositories\Centrifugo\CentrifugoHttpRepository $centrifugoHttpRepository) {
+    $data = [
+        'test' => 'test'
+    ];
+
+    $centrifugoHttpRepository->publish($data, 'channel');
+});
+
+Route::get('test1', function () {
+    return view('centrifugo');
+});
