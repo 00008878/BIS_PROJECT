@@ -9,9 +9,18 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\ApplicationProgress;
 use App\Models\ClientApplicationInvite;
+use App\UseCases\Gai\GetGaiReportUseCase;
+use App\UseCases\Mib\GetMibReportUseCase;
 
 class StoreApplicationFilesUseCase
 {
+    public function __construct(
+        private GetMibReportUseCase $getMibReportUseCase,
+        private GetGaiReportUseCase $getGaiReportUseCase,
+    )
+    {
+    }
+
     public function execute(Request $request): array
     {
         foreach ($request->files as $file) {
@@ -57,9 +66,17 @@ class StoreApplicationFilesUseCase
         });
 
         $client = Client::query()
-            ->with('applications')
+            ->with(['applications', 'passport', 'mib', 'gai'])
             ->where('user_id', auth()->user()->id)
             ->first();
+
+        if ($client->mib->exists() === false) {
+            $this->getMibReportUseCase->execute($client->passport->pinfl, $client->id);
+        }
+
+        if ($client->gai->exists() === false) {
+            $this->getGaiReportUseCase->execute($client->passport->pinfl, $client->id);
+        }
 
         $invitations = ClientApplicationInvite::query()
             ->where('to_client_id', $client->id)

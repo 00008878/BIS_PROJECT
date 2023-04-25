@@ -32,6 +32,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property-read Passport|null $passport
  * @property-read Collection|File[] $files
  * @property-read Collection|MibReport[] $mib
+ * @property-read Collection|GaiReport[] $gai
  * @property-read Collection|Application[] $applications
  * @method static Builder|Client newModelQuery()
  * @method static Builder|Client newQuery()
