@@ -70,11 +70,11 @@ class StoreApplicationFilesUseCase
             ->where('user_id', auth()->user()->id)
             ->first();
 
-        if ($client->mib->exists() === false) {
+        if ($client->mib()->exists() === false) {
             $this->getMibReportUseCase->execute($client->passport->pinfl, $client->id);
         }
 
-        if ($client->gai->exists() === false) {
+        if ($client->gai()->exists() === false) {
             $this->getGaiReportUseCase->execute($client->passport->pinfl, $client->id);
         }
 

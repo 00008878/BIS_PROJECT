@@ -26,9 +26,9 @@ class ApplicationController extends Controller
     public function applicationSendInvitation(Request $request, ApplicationSendInvitationUseCase $applicationSendInvitationUseCase): ApplicationIlluminate|Factory|View
     {
        $result = $applicationSendInvitationUseCase->execute(ApplicationSendInviteDTO::fromArray([
-           $request->input('pinfl'),
-           $request->input('application_id'),
-           $request->input('client_id'),
+           'pinfl' => $request->input('pinfl'),
+           'application_id' => $request->input('application_id'),
+           'client_id' => $request->input('client_id'),
        ]));
 
         return view('application-create', $result);
