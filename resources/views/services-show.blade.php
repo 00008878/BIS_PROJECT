@@ -8,7 +8,7 @@
             <li><b>Category:</b> {{ $service->category }}</li>
             <li><b>Type of service</b>: {{ $service->type }}</li>
             <li><b>Price</b>: {{ $service->price }}</li>
-            <li><b>Two-sided</b>: {{ $service->two_sided }}</li>
+            <li><b>Two-sided</b>: {{ $service->two_sided == 1 ? 'Yes' : 'No' }}</li>
         </ol>
 
         <h2>Requirements</h2>

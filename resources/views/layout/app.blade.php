@@ -30,7 +30,7 @@
     <!-- Main Sidebar Container -->
     <aside class="main-sidebar sidebar-dark-primary elevation-4">
         <!-- Brand Logo -->
-        <a href="" class="brand-link">
+        <a href="/home" class="brand-link">
             <span class="brand-text font-weight-light ml-2">Notary</span>
         </a>
 
@@ -39,11 +39,11 @@
             <!-- Sidebar user (optional) -->
             <div class="user-panel mt-3 pb-3 mb-3 d-flex">
                 <div class="info">
-                    <a href="#" class="d-block">
+                    <p class="d-block" style="color: white">
                         @if(\Illuminate\Support\Facades\Auth::user())
                             {{ auth()->user()->name . ' ' . auth()->user()->surname }}
                         @endif
-                    </a>
+                    </p>
                 </div>
             </div>
 
